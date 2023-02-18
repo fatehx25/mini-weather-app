@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Weather App</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        h1 {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            font-size: 2.05rem;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 70vh;
+        }
+        #input {
+            flex-grow: 0.8;
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        #output {
+            flex-grow: 2.2;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            align-items: center;
+        }
+        form select {
+            width: 10rem;
+            font-size: 1rem;
+        }
+        form button {
+            font-size: 0.9rem;
+            width: 4rem;
+            height: 1.9rem;
+            border-radius: 0.7rem;
+            border: 1px solid gainsboro;
+            box-shadow: 1px 2px 1px 0px gainsboro;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        form button:hover {
+            background-color: white;
+        }
+
+        #weatherFetched {
+            font-size: 2.4rem;
+        }
+
+        .border {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mini Weather App</h1>
+    </header>
+    <main class="border">
+
+        <section class="section border" id="input">
+            <form action="">
+                <select name="cities" id="city">
+                    <option value="null">Select City</option>
+                    <option value="Karachi">Karachi</option>
+                </select>
+                
+                <select name="countries" id="country">
+                    <option value="null">Select country</option>
+                    <option value="Pakistan">Pakistan</option>
+                </select>
+                
+                <button onsubmit="">submit</button>
+            </form>
+        </section>
+        
+        <section class="section border" id="output">
+            <div id="userSelected">London, United Kingdom</div>
+            <div id="weatherFetched">32 degrees</div>
+        </section>
+    
+    </main>
+
+    <script>
+        var headers = new Headers();
+        headers.append("X-CSCAPI-KEY", "API_KEY");
+
+        var requestOptions = {
+            method: 'GET',
+            headers: headers,
+            redirect: 'follow'
+        };
+
+        fetch("https://api.countrystatecity.in/v1/countries", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+
+        async function fetchCities() {
+            const res = await fetch('https://countriesnow.space/api/v0.1/countries/cities');
+            const cities = await res.json();
+            return cities;
+        }
+
+        async function fetchWeather(city) {
+            const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=97589488acbc43ef929155832231802&q=${city}`);
+            const weather = await res.json();
+            return weather;            
+        }
+
+        (async function doJob() {
+            const obj = await fetchCities();
+            const data = obj;
+            
+            // data.map(obj => )
+            
+            console.log(data);
+        }())
+    </script>
+</body>
+</html>
